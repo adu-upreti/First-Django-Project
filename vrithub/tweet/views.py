@@ -9,24 +9,22 @@ def index(request):
 
 
 def tweet_list(request):
-    Tweet.objects.all().order_by('-created_at')
-    return render (request, 'tweet_list.html', {'tweets'})
+    tweets = Tweet.objects.all().order_by('-created_at')
+    return render (request, 'tweet_list.html', {'tweets': tweets})
 
 
 def tweet_create(request):
     if request.method == 'POST':
-        TweetForm(request.POST, request.FILES)
+        form = TweetForm(request.POST, request.FILES)  # Form instance assigned to 'form' variable
         if form.is_valid():
-           tweet = form.save(commit=False)
-           tweet.user = request.user
-           tweet.save()
-           return redirect ('tweet_list')
-
-
+            tweet = form.save(commit=False)
+            tweet.user = request.user
+            tweet.save()
+            return redirect('tweet_list')
     else:
-     form = TweetForm()
-
-     return render(request, 'tweet_form.html', {'form': form})
+        form = TweetForm()
+    
+    return render(request, 'tweet_form.html', {'form': form})
 
 
 
